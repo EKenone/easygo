@@ -1,0 +1,16 @@
+#go.mod的module名字
+mod_name:
+
+#协议相关的参数
+proto:
+  source: #协议源路径
+  analysis: #协议源解析后存放路径
+
+#私有代码存放的参数
+internal:
+  entrance: #请求入口
+  service: #业务代码
+
+#文档路径
+doc:
+  swagger: #swagger存放路径

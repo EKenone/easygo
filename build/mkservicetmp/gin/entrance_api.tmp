@@ -1,0 +1,12 @@
+
+// {{ .Name }} {{ .Desc }}
+func (s {{ .Group }}) {{ .Name }}(ctx *gin.Context) {
+	var form = &pb.{{ .Req }}{}
+	if err := s.ValidateRequest(ctx, form); err != nil {
+		s.Response(ctx, nil, err)
+		return
+	}
+
+	res, err := s.depService(ctx).{{ .Name }}(form)
+	s.Response(ctx, res, err)
+}

@@ -1,0 +1,61 @@
+package api
+
+import (
+	"hongru/internal/errcode"
+	"hongru/internal/ginserver/action"
+	"hongru/internal/plugins/logger"
+	"hongru/internal/plugins/validator"
+	"encoding/json"
+	"github.com/gin-gonic/gin"
+)
+
+type Api struct {
+}
+
+// ChooseMid 可以选择的服务中间件
+func (a Api) ChooseMid(router *gin.RouterGroup, t action.MidType) gin.IRoutes {
+	switch t {
+	default:
+		return router
+	}
+}
+
+// Group 接口组标识
+func (a Api) Group() string {
+	return ""
+}
+
+// Register 接口注册
+func (a Api) Register() []action.Action {
+	return nil
+}
+
+// ValidateRequest 统一校验请求数据
+func (a Api) ValidateRequest(ctx *gin.Context, rt validator.RequestInterface) errcode.Error {
+	err := validator.CheckParams(ctx, rt)
+	if err != nil {
+		return err
+	}
+
+	b, _ := json.Marshal(rt)
+	logger.InfoFCtx(ctx.Request.Context(), "请求路由: %s, 请求方法: %s, 请求数据: %s", ctx.Request.URL.Path, ctx.Request.Method, string(b))
+
+	return nil
+}
+
+// Response 服务返回值
+func (a Api) Response(ctx *gin.Context, res interface{}, errCode errcode.Error) {
+	defer func() {
+		b, _ := json.Marshal(res)
+		logger.InfoFCtx(ctx.Request.Context(), "返回数据: %s, 返回错误: %v", string(b), errCode)
+	}()
+
+	//设置code
+	var rsp = gin.H{"code": errcode.OK, "msg": "ok", "data": res}
+	if errCode != nil {
+		rsp["code"] = errCode.Code()
+		rsp["msg"] = errCode.Msg()
+	}
+	
+	ctx.JSON(200, rsp)
+}
