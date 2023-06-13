@@ -1,0 +1,17 @@
+
+{{ range $value := .Messages }}
+{{ $value }}
+{{ end }}
+
+// {{ .Name }}
+// @Tags {{ .GroupDesc }}
+// @Summary {{ .Desc }}
+// {{if .SecurityTitle}}@Security {{ .SecurityTitle }} {{ end }}
+// @accept {{ .ReqContentType }}
+// @Produce {{ .ResContentType }}
+// @Param data {{ .Body }} {{ .Req }} true "数据"
+// @Success 200 {object} {{ .Res }}
+// @Router {{ .Route }} [{{ .Method }}]
+func ({{ .Group }}) {{ .Name }}() {
+
+}

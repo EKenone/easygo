@@ -1,0 +1,16 @@
+package {{ .PkgName }}
+
+import (
+	"context"
+	"github.com/gin-gonic/gin"
+)
+
+type Service struct {
+    GinCtx *gin.Context
+	Ctx context.Context
+}
+
+func (s *Service) Init(ctx *gin.Context) {
+	s.GinCtx = ctx
+    s.Ctx = ctx.Request.Context()
+}

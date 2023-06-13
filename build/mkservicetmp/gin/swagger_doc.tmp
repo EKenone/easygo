@@ -1,0 +1,6 @@
+package {{ .ModuleName }}
+
+{{ .Content }}
+func docDesc() {
+
+}

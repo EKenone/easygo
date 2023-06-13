@@ -12,3 +12,14 @@ func TestCreateTmp(t *testing.T) {
 
 	t.Log(mk.createConf())
 }
+
+func TestMkService(t *testing.T) {
+	var mk = mkService{
+		conf:   "./service.yaml",
+		module: "admin",
+		help:   false,
+		init:   "",
+	}
+
+	t.Log(mk.create())
+}

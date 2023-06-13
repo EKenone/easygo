@@ -1,0 +1,20 @@
+package {{ .ModuleName }}
+
+import (
+	"{{ .ModName }}/{{ .ApiPath }}"
+	"{{ .ModName }}/{{ .ServerPath }}/ginserver"
+	"github.com/EKenone/ginaction"
+)
+
+type Controller struct {
+	{{ .ApiPkg }}.Api
+}
+
+// Route 模块路由
+func (c Controller) Route() {
+	r := ginserver.Server.Group("{{ .ModuleRoute }}")
+
+	ginaction.AutoRegister(r, {{ if .HasController }}{{ range $value := .Controllers }}
+	    {{ $value }}{},{{end}}{{ else }}nil,{{ end }}
+    )
+}

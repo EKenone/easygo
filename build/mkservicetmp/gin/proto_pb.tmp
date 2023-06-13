@@ -1,0 +1,4 @@
+package {{ .ModuleName }}
+{{ range $value := .Messages }}
+{{ $value }}
+{{ end }}

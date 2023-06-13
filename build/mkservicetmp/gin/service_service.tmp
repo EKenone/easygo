@@ -1,0 +1,11 @@
+package {{ .ModuleName }}
+
+import (
+	pb "{{ .ModName }}/{{ .ProtocolPath }}/{{ .ModuleName }}"
+	"{{ .ModName }}/{{ .ServicePath }}"
+	"{{ .ModName }}/{{ .ErrCode }}"
+)
+
+type {{ .Group }} struct {
+	{{ .PkgName }}.Service
+}

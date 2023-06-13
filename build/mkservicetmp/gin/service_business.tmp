@@ -1,0 +1,8 @@
+
+// {{ .Name }} {{ .Desc }}
+func (s *{{ .Group }}) {{ .Name }}(req *pb.{{ .Group }}{{ .Name }}Req) (res *pb.{{ .Group }}{{ .Name }}Res, errCode errcode.Error) {
+    //TODO 实现业务
+
+    res = &pb.{{ .Group }}{{ .Name }}Res{}
+	return
+}

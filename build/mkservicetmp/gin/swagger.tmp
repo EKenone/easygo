@@ -1,0 +1,5 @@
+package {{ .ModuleName }}
+
+type {{ .Group }} struct {
+
+}

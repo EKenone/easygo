@@ -1,0 +1,10 @@
+package {{ .RoutePkg }}
+
+import ({{ range $value := .Pkg }}
+    "{{ $.ModName }}/{{ $.ApiPath }}/{{ $value }}"{{ end }}
+)
+
+// InitRoute 启动路由
+func InitRoute() { {{ range $value := .Pkg }}
+	{{ $value }}.Controller{}.Route(){{ end }}
+}

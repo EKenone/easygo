@@ -1,11 +1,8 @@
-package api
+package {{ .Package }}
 
 import (
-	"hongru/internal/errcode"
-	"hongru/internal/ginserver/action"
-	"hongru/internal/plugins/logger"
-	"hongru/internal/plugins/validator"
-	"encoding/json"
+	"{{ .ModName }}/{{ .ErrCode }}"
+	"github.com/EKenone/ginaction"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +10,7 @@ type Api struct {
 }
 
 // ChooseMid 可以选择的服务中间件
-func (a Api) ChooseMid(router *gin.RouterGroup, t action.MidType) gin.IRoutes {
+func (a Api) ChooseMid(router *gin.RouterGroup, t ginaction.MidType) gin.IRoutes {
 	switch t {
 	default:
 		return router
@@ -26,30 +23,25 @@ func (a Api) Group() string {
 }
 
 // Register 接口注册
-func (a Api) Register() []action.Action {
+func (a Api) Register() []ginaction.Action {
 	return nil
 }
 
 // ValidateRequest 统一校验请求数据
-func (a Api) ValidateRequest(ctx *gin.Context, rt validator.RequestInterface) errcode.Error {
-	err := validator.CheckParams(ctx, rt)
-	if err != nil {
-		return err
-	}
+func (a Api) ValidateRequest(ctx *gin.Context, rt any) errcode.Error {
+    if err := ctx.BindUri(rt); err != nil {
+        return errcode.VerifyErrorWithTip(err.Error())
+    }
 
-	b, _ := json.Marshal(rt)
-	logger.InfoFCtx(ctx.Request.Context(), "请求路由: %s, 请求方法: %s, 请求数据: %s", ctx.Request.URL.Path, ctx.Request.Method, string(b))
+    if err := ctx.ShouldBindQuery(rt); err != nil {
+        return errcode.VerifyErrorWithTip(err.Error())
+    }
 
 	return nil
 }
 
 // Response 服务返回值
 func (a Api) Response(ctx *gin.Context, res interface{}, errCode errcode.Error) {
-	defer func() {
-		b, _ := json.Marshal(res)
-		logger.InfoFCtx(ctx.Request.Context(), "返回数据: %s, 返回错误: %v", string(b), errCode)
-	}()
-
 	//设置code
 	var rsp = gin.H{"code": errcode.OK, "msg": "ok", "data": res}
 	if errCode != nil {

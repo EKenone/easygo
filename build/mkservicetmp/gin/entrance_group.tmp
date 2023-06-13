@@ -1,0 +1,31 @@
+package {{ .ModuleName }}
+
+import (
+	pb "{{ .ModName }}/{{ .Path }}/{{ .ModuleName }}"
+	"{{ .ModName }}/{{ .ServicePath }}/{{ .ModuleName }}"
+	"github.com/EKenone/ginaction"
+	"github.com/gin-gonic/gin"
+)
+
+// {{ .Name }} {{ .Desc }}
+type {{ .Name }} struct {
+	Controller
+	dep {{ .ModuleName }}.{{ .Name }}
+}
+
+// 依赖业务服务
+func (s {{ .Name }}) depService(ctx *gin.Context) {{ .ModuleName }}.{{ .Name }} {
+	s.dep.Init(ctx)
+	return s.dep
+}
+
+// Group 基础请求组
+func (s {{ .Name }}) Group() string {
+	return "{{ .Route }}"
+}
+
+// Register 注册路由
+func (s {{ .Name }}) Register() []ginaction.Action {
+	return []ginaction.Action{
+	}
+}

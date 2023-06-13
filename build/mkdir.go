@@ -101,7 +101,7 @@ func (m *mkdir) done(dirname string) (err error) {
 		return
 	}
 
-	err = os.Mkdir(dirname, 0666)
+	err = os.Mkdir(dirname, 0777)
 	if err != nil {
 		return errors.New(fmt.Sprintf("dir [%s] create err: %v", dirname, err))
 	}
@@ -119,7 +119,7 @@ func (m *mkdir) done(dirname string) (err error) {
 func (m *mkdir) buildDemo() (err error) {
 	m.keep = true
 
-	file, err := os.OpenFile(m.prefix()+"README.md", os.O_CREATE, 0666)
+	file, err := os.OpenFile(m.prefix()+"README.md", os.O_CREATE, 0777)
 	defer file.Close()
 	if err != nil {
 		return
