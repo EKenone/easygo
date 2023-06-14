@@ -25,7 +25,7 @@ func MkService() (err error) {
 
 	fs := flag.NewFlagSet("service", flag.ExitOnError)
 	fs.StringVar(&mk.init, "i", "", "init service conf in this path")
-	fs.StringVar(&mk.conf, "c", "", "set your config path when use service")
+	fs.StringVar(&mk.conf, "c", "config/service.yaml", "set your config path when use service")
 	fs.StringVar(&mk.module, "m", "all", "scan your module dir, default scan all")
 	fs.BoolVar(&mk.help, "help", false, "show help service")
 	fs.BoolVar(&mk.help, "h", false, "short var by help")
