@@ -3,7 +3,7 @@ package {{ .ModuleName }}
 import (
 	"{{ .ModName }}/{{ .ApiPath }}"
 	"{{ .ModName }}/{{ .ServerPath }}/ginserver"
-	"github.com/EKenone/ginaction"
+	"github.com/tdeken/ginaction"
 )
 
 type Controller struct {

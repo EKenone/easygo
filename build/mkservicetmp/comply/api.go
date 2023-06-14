@@ -68,6 +68,10 @@ func (a *Api) Build() (err error) {
 }
 
 func (a *Api) init() (err error) {
+	exist, err := utils.IsFileOrDirExist(config.Conf.Internal.Entrance + "/api.go")
+	if err != nil {
+		return
+	}
 
 	//模板内容
 	var content = gin.EntranceBase{
@@ -76,30 +80,34 @@ func (a *Api) init() (err error) {
 		ErrCode: a.errCode,
 	}
 
-	t, err := template.New("base.tpl").Parse(content.Tmp())
-	if err != nil {
-		return
+	if !exist {
+		var t *template.Template
+		t, err = template.New("base.tpl").Parse(content.Tmp())
+		if err != nil {
+			return
+		}
+
+		var buf bytes.Buffer
+		err = t.Execute(&buf, content)
+		if err != nil {
+			return
+		}
+
+		//把模板写入文件
+		var file *os.File
+		file, err = os.OpenFile(config.Conf.Internal.Entrance+"/api.go", os.O_CREATE|os.O_RDWR, 0777)
+		defer file.Close()
+		if err != nil {
+			return
+		}
+
+		_, err = file.WriteString(buf.String())
+		if err != nil {
+			return
+		}
 	}
 
-	var buf bytes.Buffer
-	err = t.Execute(&buf, content)
-	if err != nil {
-		return
-	}
-
-	//把模板写入文件
-	file, err := os.OpenFile(config.Conf.Internal.Entrance+"/api.go", os.O_CREATE|os.O_RDWR, 0777)
-	defer file.Close()
-	if err != nil {
-		return
-	}
-
-	_, err = file.WriteString(buf.String())
-	if err != nil {
-		return
-	}
-
-	exist, err := utils.IsFileOrDirExist(a.interPath + "/errcode")
+	exist, err = utils.IsFileOrDirExist(a.interPath + "/errcode")
 	if err != nil {
 		return
 	}

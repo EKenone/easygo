@@ -2,7 +2,7 @@ package {{ .Package }}
 
 import (
 	"{{ .ModName }}/{{ .ErrCode }}"
-	"github.com/EKenone/ginaction"
+	"github.com/tdeken/ginaction"
 	"github.com/gin-gonic/gin"
 )
 

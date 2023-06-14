@@ -64,7 +64,7 @@ func (b *Service) Build() (err error) {
 }
 
 func (b *Service) init() (err error) {
-	exist, err := utils.IsFileOrDirExist(config.Conf.Internal.Service)
+	exist, err := utils.IsFileOrDirExist(config.Conf.Internal.Service + "/service.go")
 	if err != nil {
 		return
 	}
@@ -191,7 +191,7 @@ func (b *Service) append(dir string, parse Parse) (err error) {
 
 	//检查基础控制器文件是否存在
 	filename := fmt.Sprintf("%s/%s.go", dir, utils.MidString(parse.Group.Name, '_'))
-	file, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0777)
+	file, err := os.OpenFile(filename, os.O_APPEND|os.O_RDWR, 0777)
 	defer file.Close()
 	if err != nil {
 		return
@@ -202,8 +202,7 @@ func (b *Service) append(dir string, parse Parse) (err error) {
 	text := string(body)
 
 	for _, v := range parse.Interfaces {
-
-		if strings.Contains(text, fmt.Sprintf("func (s %s) %s(req", parse.Group.Name, v.Name)) {
+		if strings.Contains(text, fmt.Sprintf("func (s *%s) %s(req", parse.Group.Name, v.Name)) {
 			continue
 		}
 

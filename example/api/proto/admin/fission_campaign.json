@@ -1,0 +1,524 @@
+{
+  "group": {
+    "name": "FissionCampaign",
+    "desc": "玩法活动相关"
+  },
+  "interfaces": [
+    {
+      "name": "List",
+      "desc": "活动列表",
+      "method": "GET",
+      "req": {
+        "fields": [
+          {"name": "page", "class": "int32", "desc": "当前页"},
+          {"name": "per_page", "class": "int32", "desc": "每页条数"},
+          {"name": "keyword", "class": "string", "desc": "关键字"},
+          {"name": "project_id", "class": "uint64", "desc": "项目ID", "binding": "required"}
+        ]
+      },
+      "res": {
+        "fields": [
+          {"name": "list", "class": "[]?One", "desc": "列表数据"},
+          {"name": "total", "class": "int64", "desc": "数据总条数"}
+        ],
+        "message": [
+          {
+            "name": "One",
+            "fields": [
+              {"name": "id", "class": "uint64", "desc": "活动ID"},
+              {"name": "mate_id", "class": "string", "desc": "活动临时ID"},
+              {"name": "title", "class": "string", "desc": "活动标题"},
+              {"name": "fission_id", "class": "uint64", "desc": "玩法ID"},
+              {"name": "fission_mark", "class": "string", "desc": "活动类型玩法标识"},
+              {"name": "fission_title", "class": "string", "desc": "活动玩法说明"},
+              {"name": "start_date", "class": "string", "desc": "开始时间，如：2023-05-25 15:18"},
+              {"name": "end_date", "class": "string", "desc": "结束时间，如：2023-05-25 15:18"},
+              {"name": "creator", "class": "string", "desc": "创建人"},
+              {"name": "share_link", "class": "string", "desc": "分享链接"},
+              {"name": "status", "class": "uint32", "desc": "发布状态（1-待发布，2-已发布，3-已下线）"}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Store",
+      "desc": "创建活动",
+      "method": "POST",
+      "req": {
+        "fields": [
+          {"name": "template_id", "class": "uint64", "desc": "玩法模板ID", "binding": "required"},
+          {"name": "language_pkg_id", "class": "uint64", "desc": "语言包ID", "binding": "required"},
+          {"name": "project_id", "class": "uint64", "desc": "项目ID"},
+          {"name": "project_hash_id", "class": "string", "desc": "项目ID（兼容旧接口）"},
+          {"name": "title", "class": "string", "desc": "活动标题", "binding": "required"},
+          {"name": "start_time", "class": "string", "desc": "开始时间（2023-05-25 00:00:00）", "binding": "required"},
+          {"name": "end_time", "class": "string", "desc": "结束时间（2023-05-25 00:00:00）", "binding": "required"},
+          {"name": "config", "class": "?Config", "desc": "活动基础配置"},
+          {"name": "campaign_data", "class": "[]?CampaignData", "desc": "活动自定义参数数据（新人跳转Campaign Data）"},
+          {"name": "prize_quiz", "class": "?PrizeQuiz", "desc": "赛事竞猜配置（赛事竞猜玩法必传）"},
+          {"name": "prize_wheel", "class": "?PrizeWheel", "desc": "大转盘配置（大转盘玩法必传）"}
+        ],
+        "message": [
+          {
+            "name": "Config",
+            "fields": [
+              {"name": "text_color", "class": "string", "desc": "文字颜色"},
+              {"name": "background_color", "class": "string", "desc": "背景颜色"},
+              {"name": "share_text", "class": "string", "desc": "分享文案"},
+              {"name": "has_rank", "class": "uint32", "desc": "是否展示中奖纪录（1-是，0-否）"},
+              {"name": "rank_background_color", "class": "string", "desc": "排行榜背景颜色"},
+              {"name": "rank_text_color", "class": "string", "desc": "排行榜字体颜色"},
+              {"name": "download_page_image", "class": "string", "desc": "下载引导页的图片"},
+              {"name": "wechat_page_image", "class": "string", "desc": "微信引导页的图片"},
+              {"name": "image_main", "class": "string", "desc": "活动主图"},
+              {"name": "image_end", "class": "string", "desc": "活动结束主图"},
+              {"name": "universal_button_text", "class": "string", "desc": "通用的按钮文本（在落地页配置的按钮文案）"},
+              {"name": "universal_button_color", "class": "string", "desc": "通用的按钮颜色（在落地页配置的按钮颜色）"},
+              {"name": "play_rule", "class": "[]string", "desc": "玩法规则"},
+              {"name": "must_known", "class": "[]string", "desc": "活动需知"},
+              {"name": "word_desc", "class": "[]string", "desc": "名词需知"},
+              {"name": "contact", "class": "[]string", "desc": "联系方式"}
+            ]
+          },
+          {
+            "name": "PrizeQuiz",
+            "fields": [
+              {"name": "target_num", "class": "uint32", "desc": "达标条件需要的新用户个数"},
+              {"name": "init_chance", "class": "uint32", "desc": "初始答题机会次数"},
+              {"name": "question_ask_time", "class": "uint32", "desc": "答题时间限制（单位：S，如：1 就是1秒）"},
+              {"name": "title", "class": "string", "desc": "答题标题文案"},
+              {"name": "chance_title", "class": "string", "desc": "答题机会文案"},
+              {"name": "show_reward", "class": "uint32", "desc": "是否展示中奖纪录（1-是，0-否）"},
+              {"name": "question", "class": "[]?Question", "desc": "赛事竞猜题目"},
+              {"name": "reward", "class": "?Reward", "desc": "赛事竞猜奖励"}
+            ],
+            "message": [
+              {
+                "name": "Question",
+                "fields": [
+                  {"name": "title", "class": "string", "desc": "题目"},
+                  {"name": "score", "class": "uint32", "desc": "得分"},
+                  {"name": "checked_type", "class": "uint32", "desc": "题目选择类型（1-单选，2-多选）"},
+                  {"name": "sort_type", "class": "uint32", "desc": "题目选择类型（1-大写英文，2-小写英文，3-数字）"},
+                  {"name": "options", "class": "[]?Option", "desc": "选项"}
+                ],
+                "message": [
+                {
+                  "name": "Option",
+                  "fields": [
+                    {"name": "title", "class": "string", "desc": "答案"},
+                    {"name": "right_key", "class": "uint32", "desc": "是否正确答案(1-是，0-否)"}
+                  ]
+                }
+              ]
+              },
+              {
+                "name": "Reward",
+                "fields": [
+                  {"name": "score", "class": "uint32", "desc": "分数线（获取奖励最低分数线）"},
+                  {"name": "title", "class": "string", "desc": "奖品名称"},
+                  {"name": "img_url", "class": "string", "desc": "奖品图片（相对路径）"},
+                  {"name": "jump_url", "class": "string", "desc": "开奖页面跳转url"},
+                  {"name": "custom_params", "class": "[]?CustomParams", "desc": "奖品自定义参数数据"}
+                ],
+                "message": [
+                  {
+                    "name": "CustomParams",
+                    "fields": [
+                      {"name": "key", "class": "string", "desc": "键名字"},
+                      {"name": "value", "class": "string", "desc": "键对应的值"}
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "PrizeWheel",
+            "fields": [
+              {"name": "target_num", "class": "uint32", "desc": "达标条件需要的新用户个数"},
+              {"name": "init_chance", "class": "uint32", "desc": "初始抽奖机会次数"},
+              {"name": "show_reward", "class": "uint32", "desc": "是否展示中奖纪录（1-是，0-否）"},
+              {"name": "odds", "class": "uint32", "desc": "中奖率"},
+              {"name": "reward", "class": "[]?Reward", "desc": "大转盘奖励"}
+            ],
+            "message": [
+              {
+                "name": "Reward",
+                "fields": [
+                  {"name": "stock", "class": "int64", "desc": "库存"},
+                  {"name": "title", "class": "string", "desc": "奖品名称"},
+                  {"name": "img_url", "class": "string", "desc": "奖品图片（相对路径）"},
+                  {"name": "jump_url", "class": "string", "desc": "开奖页面跳转url"},
+                  {"name": "custom_params", "class": "[]?CustomParams", "desc": "奖品自定义参数数据"}
+                ],
+                "message": [
+                  {
+                    "name": "CustomParams",
+                    "fields": [
+                      {"name": "key", "class": "string", "desc": "键名字"},
+                      {"name": "value", "class": "string", "desc": "键对应的值"}
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "CampaignData",
+            "fields": [
+              {"name": "key", "class": "string", "desc": "键名字"},
+              {"name": "value", "class": "string", "desc": "键对应的值"}
+            ]
+          }
+        ]
+      },
+      "res": {
+        "fields": [
+          {"name": "id", "class": "uint64", "desc": "活动ID"}
+        ]
+      }
+    },
+    {
+      "name": "Show",
+      "desc": "活动详情",
+      "method": "GET",
+      "req": {
+        "fields": [
+          {"name": "id", "class": "uint64", "desc": "活动ID", "binding": "required"},
+          {"name": "mate_id", "class": "string", "desc": "活动临时ID", "binding": "required"}
+        ]
+      },
+      "res": {
+        "fields": [
+          {"name": "id", "class": "uint64", "desc": "活动ID"},
+          {"name": "mate_id", "class": "string", "desc": "活动临时ID"},
+          {"name": "template_id", "class": "uint64", "desc": "玩法模板ID"},
+          {"name": "language_pkg_id", "class": "uint64", "desc": "语言包ID"},
+          {"name": "project_id", "class": "uint64", "desc": "项目ID"},
+          {"name": "title", "class": "string", "desc": "活动标题"},
+          {"name": "start_time", "class": "string", "desc": "开始时间（2023-05-25 00:00:00）"},
+          {"name": "end_time", "class": "string", "desc": "结束时间（2023-05-25 00:00:00）"},
+          {"name": "status", "class": "uint32", "desc": "修改状态（1-待发布，2-已发布，3-已下线）"},
+          {"name": "config", "class": "?Config", "desc": "活动基础配置"},
+          {"name": "campaign_data", "class": "[]?CampaignData", "desc": "活动自定义参数数据（新人跳转Campaign Data）"},
+          {"name": "prize_quiz", "class": "?PrizeQuiz", "desc": "赛事竞猜配置（赛事竞猜玩法才有该值）", "json_tag": ["omitempty"]},
+          {"name": "prize_wheel", "class": "?PrizeWheel", "desc": "大转盘配置（大转盘玩法才有该值）", "json_tag": ["omitempty"]}
+        ],
+        "message": [
+          {
+            "name": "Config",
+            "fields": [
+              {"name": "text_color", "class": "string", "desc": "文字颜色"},
+              {"name": "background_color", "class": "string", "desc": "背景颜色"},
+              {"name": "share_text", "class": "string", "desc": "分享文案"},
+              {"name": "has_rank", "class": "uint32", "desc": "是否展示中奖纪录（1-是，0-否）"},
+              {"name": "rank_background_color", "class": "string", "desc": "排行榜背景颜色"},
+              {"name": "rank_text_color", "class": "string", "desc": "排行榜字体颜色"},
+              {"name": "download_page_image", "class": "string", "desc": "下载引导页的图片"},
+              {"name": "wechat_page_image", "class": "string", "desc": "微信引导页的图片"},
+              {"name": "image_main", "class": "string", "desc": "活动主图"},
+              {"name": "image_end", "class": "string", "desc": "活动结束主图"},
+              {"name": "image_landing", "class": "string", "desc": "落地页背景图"},
+              {"name": "image_preview", "class": "string", "desc": "预览页图"},
+              {"name": "image_status_item", "class": "string", "desc": "按钮图片"},
+              {"name": "image_status_background", "class": "string", "desc": "战绩背景图（一般在按钮上方显示数据的小面板）"},
+              {"name": "universal_button_text", "class": "string", "desc": "通用的按钮文本（在落地页配置的按钮文案）"},
+              {"name": "universal_button_color", "class": "string", "desc": "通用的按钮颜色（在落地页配置的按钮颜色）"},
+              {"name": "play_rule", "class": "[]string", "desc": "玩法规则"},
+              {"name": "must_known", "class": "[]string", "desc": "活动需知"},
+              {"name": "word_desc", "class": "[]string", "desc": "名词需知"},
+              {"name": "contact", "class": "[]string", "desc": "联系方式"}
+            ]
+          },
+          {
+            "name": "CampaignData",
+            "fields": [
+              {"name": "key", "class": "string", "desc": "键名字"},
+              {"name": "value", "class": "string", "desc": "键对应的值"}
+            ]
+          },
+          {
+            "name": "PrizeQuiz",
+            "fields": [
+              {"name": "target_num", "class": "uint32", "desc": "达标条件需要的新用户个数"},
+              {"name": "init_chance", "class": "uint32", "desc": "初始答题机会次数"},
+              {"name": "question_ask_time", "class": "uint32", "desc": "答题时间限制（单位：S，如：1 就是1秒）"},
+              {"name": "title", "class": "string", "desc": "答题标题文案"},
+              {"name": "chance_title", "class": "string", "desc": "答题机会文案"},
+              {"name": "show_reward", "class": "uint32", "desc": "是否展示中奖纪录（1-是，0-否）"},
+              {"name": "question", "class": "[]?Question", "desc": "赛事竞猜题目"},
+              {"name": "reward", "class": "?Reward", "desc": "赛事竞猜奖励"}
+            ],
+            "message": [
+              {
+                "name": "Question",
+                "fields": [
+                  {"name": "title", "class": "string", "desc": "题目"},
+                  {"name": "score", "class": "uint32", "desc": "得分"},
+                  {"name": "checked_type", "class": "uint32", "desc": "题目选择类型（1-单选，2-多选）"},
+                  {"name": "sort_type", "class": "uint32", "desc": "题目选择类型（1-大写英文，2-小写英文，3-数字）"},
+                  {"name": "options", "class": "[]?Option", "desc": "选项"}
+                ],
+                "message": [
+                  {
+                    "name": "Option",
+                    "fields": [
+                      {"name": "title", "class": "string", "desc": "答案"},
+                      {"name": "right_key", "class": "uint32", "desc": "是否正确答案(1-是，0-否)"}
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "Reward",
+                "fields": [
+                  {"name": "score", "class": "uint32", "desc": "分数线（获取奖励最低分数线）"},
+                  {"name": "title", "class": "string", "desc": "奖品名称"},
+                  {"name": "img_url", "class": "string", "desc": "奖品图片（相对路径）"},
+                  {"name": "jump_url", "class": "string", "desc": "开奖页面跳转url"},
+                  {"name": "custom_params", "class": "[]?CustomParams", "desc": "奖品自定义参数数据"}
+                ],
+                "message": [
+                  {
+                    "name": "CustomParams",
+                    "fields": [
+                      {"name": "key", "class": "string", "desc": "键名字"},
+                      {"name": "value", "class": "string", "desc": "键对应的值"}
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "PrizeWheel",
+            "fields": [
+              {"name": "target_num", "class": "uint32", "desc": "达标条件需要的新用户个数"},
+              {"name": "init_chance", "class": "uint32", "desc": "初始抽奖机会次数"},
+              {"name": "show_reward", "class": "uint32", "desc": "是否展示中奖纪录（1-是，0-否）"},
+              {"name": "odds", "class": "uint32", "desc": "中奖率"},
+              {"name": "reward", "class": "[]?Reward", "desc": "大转盘奖励"}
+            ],
+            "message": [
+              {
+                "name": "Reward",
+                "fields": [
+                  {"name": "id", "class": "uint64", "desc": "奖品ID"},
+                  {"name": "stock", "class": "int64", "desc": "库存"},
+                  {"name": "title", "class": "string", "desc": "奖品名称"},
+                  {"name": "img_url", "class": "string", "desc": "奖品图片（相对路径）"},
+                  {"name": "jump_url", "class": "string", "desc": "开奖页面跳转url"},
+                  {"name": "custom_params", "class": "[]?CustomParams", "desc": "奖品自定义参数数据"}
+                ],
+                "message": [
+                  {
+                    "name": "CustomParams",
+                    "fields": [
+                      {"name": "key", "class": "string", "desc": "键名字"},
+                      {"name": "value", "class": "string", "desc": "键对应的值"}
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Status",
+      "desc": "修改活动状态",
+      "method": "POST",
+      "req": {
+        "fields": [
+          {"name": "id", "class": "uint64", "desc": "活动ID", "binding": "required"},
+          {"name": "mate_id", "class": "string", "desc": "活动临时ID", "binding": "required"},
+          {"name": "status", "class": "uint32", "desc": "修改状态（1-待发布，2-已发布，3-已下线）", "binding": "required"}
+        ]
+      },
+      "res": {}
+    },
+    {
+      "name": "Destroy",
+      "desc": "删除活动",
+      "method": "POST",
+      "req": {
+        "fields": [
+          {"name": "id", "class": "uint64", "desc": "活动ID", "binding": "required"},
+          {"name": "mate_id", "class": "string", "desc": "活动临时ID", "binding": "required"}
+        ]
+      },
+      "res": {}
+    },
+    {
+      "name": "Update",
+      "desc": "更新活动",
+      "method": "POST",
+      "req": {
+        "fields": [
+          {"name": "id", "class": "uint64", "desc": "活动ID", "binding": "required"},
+          {"name": "mate_id", "class": "string", "desc": "活动临时ID", "binding": "required"},
+          {"name": "language_pkg_id", "class": "uint64", "desc": "语言包ID", "binding": "required"},
+          {"name": "title", "class": "string", "desc": "活动标题", "binding": "required"},
+          {"name": "start_time", "class": "string", "desc": "开始时间（2023-05-25 00:00:00）", "binding": "required"},
+          {"name": "end_time", "class": "string", "desc": "结束时间（2023-05-25 00:00:00）", "binding": "required"},
+          {"name": "config", "class": "?Config", "desc": "活动基础配置"},
+          {"name": "campaign_data", "class": "[]?CampaignData", "desc": "活动自定义参数数据（新人跳转Campaign Data）"},
+          {"name": "prize_quiz", "class": "?PrizeQuiz", "desc": "赛事竞猜配置（赛事竞猜玩法必传）"},
+          {"name": "prize_wheel", "class": "?PrizeWheel", "desc": "大转盘配置（大转盘玩法必传）"}
+        ],
+        "message": [
+          {
+            "name": "Config",
+            "fields": [
+              {"name": "text_color", "class": "string", "desc": "文字颜色"},
+              {"name": "background_color", "class": "string", "desc": "背景颜色"},
+              {"name": "universal_button_text", "class": "string", "desc": "通用的按钮文本（在落地页配置的按钮文案）"},
+              {"name": "universal_button_color", "class": "string", "desc": "通用的按钮颜色（在落地页配置的按钮颜色）"},
+              {"name": "share_text", "class": "string", "desc": "分享文案"},
+              {"name": "has_rank", "class": "uint32", "desc": "是否展示中奖纪录（1-是，0-否）"},
+              {"name": "rank_background_color", "class": "string", "desc": "排行榜背景颜色"},
+              {"name": "rank_text_color", "class": "string", "desc": "排行榜字体颜色"},
+              {"name": "download_page_image", "class": "string", "desc": "下载引导页的图片"},
+              {"name": "wechat_page_image", "class": "string", "desc": "微信引导页的图片"},
+              {"name": "image_main", "class": "string", "desc": "活动主图"},
+              {"name": "image_end", "class": "string", "desc": "活动结束主图"},
+              {"name": "play_rule", "class": "[]string", "desc": "玩法规则"},
+              {"name": "must_known", "class": "[]string", "desc": "活动需知"},
+              {"name": "word_desc", "class": "[]string", "desc": "名词需知"},
+              {"name": "contact", "class": "[]string", "desc": "联系方式"}
+            ]
+          },
+          {
+            "name": "PrizeQuiz",
+            "fields": [
+              {"name": "target_num", "class": "uint32", "desc": "达标条件需要的新用户个数"},
+              {"name": "init_chance", "class": "uint32", "desc": "初始答题机会次数"},
+              {"name": "question_ask_time", "class": "uint32", "desc": "答题时间限制（单位：S，如：1 就是1秒）"},
+              {"name": "title", "class": "string", "desc": "答题标题文案"},
+              {"name": "chance_title", "class": "string", "desc": "答题机会文案"},
+              {"name": "show_reward", "class": "uint32", "desc": "是否展示中奖纪录（1-是，0-否）"},
+              {"name": "question", "class": "[]?Question", "desc": "赛事竞猜题目"},
+              {"name": "reward", "class": "?Reward", "desc": "赛事竞猜奖励"}
+            ],
+            "message": [
+              {
+                "name": "Question",
+                "fields": [
+                  {"name": "title", "class": "string", "desc": "题目"},
+                  {"name": "score", "class": "uint32", "desc": "得分"},
+                  {"name": "checked_type", "class": "uint32", "desc": "题目选择类型（1-单选，2-多选）"},
+                  {"name": "sort_type", "class": "uint32", "desc": "题目选择类型（1-大写英文，2-小写英文，3-数字）"},
+                  {"name": "options", "class": "[]?Option", "desc": "选项"}
+                ],
+                "message": [
+                  {
+                    "name": "Option",
+                    "fields": [
+                      {"name": "title", "class": "string", "desc": "答案"},
+                      {"name": "right_key", "class": "uint32", "desc": "是否正确答案(1-是，0-否)"}
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "Reward",
+                "fields": [
+                  {"name": "score", "class": "uint32", "desc": "分数线（获取奖励最低分数线）"},
+                  {"name": "title", "class": "string", "desc": "奖品名称"},
+                  {"name": "img_url", "class": "string", "desc": "奖品图片（相对路径）"},
+                  {"name": "jump_url", "class": "string", "desc": "开奖页面跳转url"},
+                  {"name": "custom_params", "class": "[]?CustomParams", "desc": "奖品自定义参数数据"}
+                ],
+                "message": [
+                  {
+                    "name": "CustomParams",
+                    "fields": [
+                      {"name": "key", "class": "string", "desc": "键名字"},
+                      {"name": "value", "class": "string", "desc": "键对应的值"}
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "PrizeWheel",
+            "fields": [
+              {"name": "target_num", "class": "uint32", "desc": "达标条件需要的新用户个数"},
+              {"name": "init_chance", "class": "uint32", "desc": "初始抽奖机会次数"},
+              {"name": "show_reward", "class": "uint32", "desc": "是否展示中奖纪录（1-是，0-否）"},
+              {"name": "odds", "class": "uint32", "desc": "中奖率"},
+              {"name": "reward", "class": "[]?Reward", "desc": "大转盘奖励"}
+            ],
+            "message": [
+              {
+                "name": "Reward",
+                "fields": [
+                  {"name": "id", "class": "uint64", "desc": "奖品ID"},
+                  {"name": "stock", "class": "int64", "desc": "库存"},
+                  {"name": "title", "class": "string", "desc": "奖品名称"},
+                  {"name": "img_url", "class": "string", "desc": "奖品图片（相对路径）"},
+                  {"name": "jump_url", "class": "string", "desc": "开奖页面跳转url"},
+                  {"name": "custom_params", "class": "[]?CustomParams", "desc": "奖品自定义参数数据"}
+                ],
+                "message": [
+                  {
+                    "name": "CustomParams",
+                    "fields": [
+                      {"name": "key", "class": "string", "desc": "键名字"},
+                      {"name": "value", "class": "string", "desc": "键对应的值"}
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "CampaignData",
+            "fields": [
+              {"name": "key", "class": "string", "desc": "键名字"},
+              {"name": "value", "class": "string", "desc": "键对应的值"}
+            ]
+          }
+        ]
+      },
+      "res": {
+        "fields": [
+          {"name": "id", "class": "uint64", "desc": "活动ID"}
+        ]
+      }
+    },
+    {
+      "name": "Reward",
+      "desc": "奖励列表",
+      "method": "GET",
+      "req": {
+        "fields": [
+          {"name": "page", "class": "int32", "desc": "当前页"},
+          {"name": "per_page", "class": "int32", "desc": "每页条数"},
+          {"name": "campaign_id", "class": "uint64", "desc": "活动ID", "binding": "required"},
+          {"name": "mate_id", "class": "string", "desc": "活动临时ID", "binding": "required"}
+        ]
+      },
+      "res": {
+        "fields": [
+          {"name": "list", "class": "[]?One", "desc": "列表数据"},
+          {"name": "total", "class": "int64", "desc": "列表总数"}
+        ],
+        "message": [
+          {
+            "name": "One",
+            "fields": [
+              {"name": "sub_user_id", "class": "string", "desc": "用户ID"},
+              {"name": "created_date", "class": "string", "desc": "奖励时间"},
+              {"name": "title", "class": "string", "desc": "奖励内容"}
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
