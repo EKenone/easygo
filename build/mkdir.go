@@ -119,7 +119,7 @@ func (m *mkdir) done(dirname string) (err error) {
 func (m *mkdir) buildDemo() (err error) {
 	m.keep = true
 
-	file, err := os.OpenFile(m.prefix()+"README.md", os.O_CREATE, 0777)
+	file, err := os.OpenFile(m.prefix()+"README.md", os.O_CREATE|os.O_RDWR, 0777)
 	defer file.Close()
 	if err != nil {
 		return

@@ -84,7 +84,7 @@ func (i *mkService) createConf() error {
 		return errors.New(fmt.Sprintf("[%s] exist", i.init))
 	}
 
-	file, err := os.OpenFile(filename, os.O_CREATE, 0777)
+	file, err := os.OpenFile(filename, os.O_CREATE|os.O_RDWR, 0777)
 	defer file.Close()
 	if err != nil {
 		return errors.New(fmt.Sprintf("create [%s] error : %v", i.init, err))
