@@ -2,13 +2,13 @@ package build
 
 import (
 	"bytes"
-	"easygo/build/mkservicetmp/comply"
-	"easygo/build/mkservicetmp/config"
-	"easygo/build/mkservicetmp/gin"
-	"easygo/build/mkservicetmp/utils"
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/tdeken/easygo/build/mkservicetmp/comply"
+	"github.com/tdeken/easygo/build/mkservicetmp/config"
+	"github.com/tdeken/easygo/build/mkservicetmp/gin"
+	"github.com/tdeken/easygo/build/mkservicetmp/utils"
 	"gopkg.in/yaml.v3"
 	"html/template"
 	"os"

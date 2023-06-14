@@ -1,8 +1,8 @@
 package main
 
 import (
-	"easygo/build"
 	"fmt"
+	"github.com/tdeken/easygo/build"
 	"os"
 )
 

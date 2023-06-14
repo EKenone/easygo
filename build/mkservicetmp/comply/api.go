@@ -2,10 +2,10 @@ package comply
 
 import (
 	"bytes"
-	"easygo/build/mkservicetmp/config"
-	"easygo/build/mkservicetmp/gin"
-	"easygo/build/mkservicetmp/utils"
 	"fmt"
+	"github.com/tdeken/easygo/build/mkservicetmp/config"
+	"github.com/tdeken/easygo/build/mkservicetmp/gin"
+	"github.com/tdeken/easygo/build/mkservicetmp/utils"
 	"html/template"
 	"io"
 	"os"
